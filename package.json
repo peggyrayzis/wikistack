@@ -1,0 +1,27 @@
+{
+  "name": "wikistack",
+  "version": "1.0.0",
+  "description": "Wikipedia clone",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -e html,js,css app.js"
+  },
+  "keywords": [
+    "wiki"
+  ],
+  "author": "Peggy & Nichole",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "morgan": "^1.7.0",
+    "pg": "^4.5.5",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.22.0",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.2"
+  }
+}
