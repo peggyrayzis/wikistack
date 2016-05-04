@@ -2,10 +2,10 @@
 
 {% block content %}
   <h3>{{page.title}}<small> (<a href="PLACEHOLDER_URL_TITLE/similar">Similar</a>)</small></h3>
-  <h4>by <a href="PLACEHOLDER-AUTHOR-URL">{{user.name}}</a></h4>
+  <h4>by <a href="PLACEHOLDER-AUTHOR-URL">{{author.name}}</a></h4>
   <div>PLACEHOLDER TAG LIST</div>
   <hr/>
-  <div>{{user.name}}</div>
+  <div>{{author.name}}</div>
   <div class="page-body">{{page.content}}</div>
   <hr/>
   <a href="{{page.urlTitle}} + '/edit'" class="btn btn-primary">edit this page</a>

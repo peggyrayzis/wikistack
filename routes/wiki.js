@@ -19,14 +19,28 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  var page = Page.build({
-  	title: req.body.title,
-  	content: req.body.pageContent,
-  	status: req.body.status
-  });
-  page.save()
-  	.then(function(savedPage){
-  		res.redirect(savedPage.route);
+  User.findOrCreate({
+	where: {
+	  	name: req.body.authorName,
+	  	email: req.body.authorEmail
+	}
+  })
+  .then(function(values){
+  	var user = values[0];
+  	
+  	var page = Page.build({
+	  	title: req.body.title,
+	  	content: req.body.pageContent,
+	  	status: req.body.status
+	});
+
+	return page.save().then(function(page){
+		return page.setAuthor(user)
+	})
+
+  })
+  .then(function(page){
+  		res.redirect(page.route);
   	}).catch(next);
 });
 
@@ -41,12 +55,16 @@ router.get('/:urlTitle', function (req, res, next) {
     } 
   })
   .then(function(foundPage){
-    res.render('wikipage', {
-    	page: foundPage
-    });
+  	var findingAuthor = foundPage.getAuthor()
+  	findingAuthor.then(function(author){
+  		res.render('wikipage', {
+    		page: foundPage,
+    		author: author
+    	});
+  	});
   })
   .catch(next);
-
 });
+
 
 module.exports = router;
