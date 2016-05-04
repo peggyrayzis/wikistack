@@ -30,9 +30,9 @@ swig.setDefaults({
 app.use(morgan('dev'));
 
 
-models.Page.sync({force: true})
+models.Page.sync({ force: true })
 	.then(function(){
-		return models.User.sync()
+		return models.User.sync({ force: true })
 	})
 	.then(function(){
 		app.listen(1300, function(){
