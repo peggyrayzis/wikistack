@@ -54,7 +54,7 @@ var Page = db.define('Page',{
 	},
     instanceMethods: {
         findSimilar: function () {
-            return this.constructor.findAll({
+            return Page.findAll({
                 where: {
                     id: {
                     	// this is the instance you're calling it on

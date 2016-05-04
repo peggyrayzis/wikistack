@@ -1,11 +1,16 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h3>{{page.title}}<small> (<a href="PLACEHOLDER_URL_TITLE/similar">Similar</a>)</small></h3>
+  <h3>{{page.title}}<small> (<a href="{{page.route}}/similar">Similar</a>)</small></h3>
   <h4>by <a href="{{author.userroute}}">{{author.name}}</a></h4>
-  <div>{{tags}}</div>
-  <hr/>
-  <div>{{author.name}}</div>
+  <ul>
+    {% for tag in page.tags %}
+    <li>
+        <a href="{{tag}}">{{tag}}</a>
+    </li>
+    {% endfor %}
+	</ul>
+<hr/>
   <div class="page-body">{{page.content}}</div>
   <hr/>
   <a href="{{page.urlTitle}} + '/edit'" class="btn btn-primary">edit this page</a>

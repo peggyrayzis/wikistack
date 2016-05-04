@@ -54,6 +54,17 @@ router.get('/add', function(req, res, next) {
   res.render('addpage');
 });
 
+router.get('/search', function (req, res, next) {
+    Page.findByTag(req.query.search)
+        .then(function (pages) {
+            res.render('index', {
+                pages: pages
+            });
+        })
+        .catch(next);
+
+});
+
 router.get('/:urlTitle', function (req, res, next) {
   Page.findOne({ 
     where: { 
@@ -72,6 +83,43 @@ router.get('/:urlTitle', function (req, res, next) {
   	});
   })
   .catch(next);
+});
+
+router.get('/:urlTitle/delete', function (req, res, next) {
+
+    Page.destroy({
+            where: {
+                urlTitle: req.params.urlTitle
+            }
+        })
+        .then(function () {
+            res.redirect('/wiki');
+        })
+        .catch(next);
+
+});
+
+router.get('/:urlTitle/similar', function (req, res, next) {
+
+    Page.findOne({
+            where: {
+                urlTitle: req.params.urlTitle
+            }
+        })
+        .then(function (page) {
+            if (page === null) {
+                res.status(404).send();
+            } else {
+                return page.findSimilar()
+                    .then(function (pages) {
+                        res.render('index', {
+                            pages: pages
+                        });
+                    });
+            }
+        })
+        .catch(next);
+
 });
 
 

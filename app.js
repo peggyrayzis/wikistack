@@ -32,9 +32,11 @@ app.use(morgan('dev'));
 
 // var shouldBeForced = process.argv[2] === "force"
 
-models.Page.sync({force: true})
+var ft = { force: true }
+
+models.Page.sync()
 	.then(function(){
-		return models.User.sync({force: true})
+		return models.User.sync()
 	})
 	.then(function(){
 		app.listen(1300, function(){
