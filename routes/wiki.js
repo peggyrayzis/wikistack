@@ -11,6 +11,7 @@ router.get('/', function (req, res, next) {
 				pages: foundPages
 			})
 		})
+		.catch(next)
 
 	// res.render('index', {});
 	// res.redirect('/');
@@ -26,16 +27,16 @@ router.post('/', function(req, res, next) {
 	}
   })
   .then(function(values){
+  	// could also use .spread here (bluebird). it takes the arr and spreads it out over several params
   	var user = values[0];
-  	console.log("tags here ", req.body.tags)
   	
-  	var tagsArr = req.body.tags.split(" ")
+  	// var tagsArr = req.body.tags.split(" ")
 
   	var page = Page.build({
 	  	title: req.body.title,
 	  	content: req.body.pageContent,
-	  	status: req.body.status,
-	  	tags: tagsArr
+	  	status: req.body.pageStatus,
+	  	tags: req.body.tags
 	});
 
 

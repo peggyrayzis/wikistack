@@ -30,6 +30,7 @@ swig.setDefaults({
 // logging middleware
 app.use(morgan('dev'));
 
+// var shouldBeForced = process.argv[2] === "force"
 
 models.Page.sync({force: true})
 	.then(function(){
@@ -55,3 +56,12 @@ app.use(bodyParser.json()); // would be for AJAX requests
 // modular routing that uses io inside it
 app.use('/wiki', wikiRouter);
 app.use('/users', userRouter)
+
+// error handling middleware
+// you have to supply all these parameters for this to work
+// call next on your errors
+app.use(function(err,req,res,next){
+	console.error(err);
+	res.status(500).send(err.message);
+});
+

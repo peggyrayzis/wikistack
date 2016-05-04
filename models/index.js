@@ -1,7 +1,7 @@
 var Sequelize = require('sequelize');
 var db = new Sequelize('postgres://localhost:5432/wikistack'
 	// , { logging: false }
-	)
+	);
 
 var Page = db.define('Page',{
 	title: {
@@ -24,7 +24,13 @@ var Page = db.define('Page',{
 		type: Sequelize.ENUM('open', 'closed')
 	},
 	tags: {
-		type: Sequelize.ARRAY(Sequelize.TEXT)
+		type: Sequelize.ARRAY(Sequelize.TEXT),
+		defaultValue: [],
+		set: function(value){
+			var tagsAsAnArray = value.split(", ");
+			this.setDataValue('tags', tagsAsAnArray);
+			// setDataValue circumvents all the hooks & setters to set the value & avoid a loop
+		}
 	}
 
 },  {
@@ -32,8 +38,35 @@ var Page = db.define('Page',{
 		route: function(){
 			return "/wiki/" + this.urlTitle;
 		}
-	}
 	// invoke via page.route
+	},
+	classMethods: {
+		// resolves to all the pages in an arr that have the specific tag
+        findByTag: function (tag) {
+            return this.findAll({
+                where: {
+                    tags: {
+                        $contains: [tag]
+                    }
+                }
+            });
+        }
+	},
+    instanceMethods: {
+        findSimilar: function () {
+            return this.constructor.findAll({
+                where: {
+                    id: {
+                    	// this is the instance you're calling it on
+                        $ne: this.id
+                    },
+                    tags: {
+                        $overlap: this.tags
+                    }
+                }
+            });
+        }
+    }
 });
 
 Page.hook('beforeValidate', function(page, options){
@@ -45,15 +78,6 @@ Page.hook('beforeValidate', function(page, options){
     	// Generates random 5 letter string
     	page.urlTitle = Math.random().toString(36).substring(2, 7);
   	}
-})
-
-Page.find({
-    // $overlap matches a set of possibilities
-    where : {
-        tags: {
-            $overlap: ['someTag', 'someOtherTag']
-        }
-    }    
 });
 
 var User = db.define('User', {
@@ -63,8 +87,10 @@ var User = db.define('User', {
 	},
 	email: {
 		type: Sequelize.STRING,
-		isEmail: true,
-		allowNull: false
+		allowNull: false,
+		validate: {
+			isEmail: true
+		}
 	}
 }, {
 	getterMethods: {
@@ -79,4 +105,4 @@ Page.belongsTo(User, { as: 'author' });
 module.exports = {
 	Page: Page,
 	User: User
-}
+};
