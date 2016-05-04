@@ -9,4 +9,15 @@
   {% endfor %}
     <!-- PLACEHOLDER LIST OF PAGES -->
   </ul>
+  
+  <h3>Search</h3>
+  <hr>
+  <form method="GET" action="/wiki/search">
+     <div class="form-group">
+      <label for="tags" class="col-sm-2 control-label">Search Tags</label>
+      <div class="col-sm-10">
+        <input name="tags" type="text" class="form-control"/>
+      </div>
+    </div>
+  </form>
 {% endblock %}

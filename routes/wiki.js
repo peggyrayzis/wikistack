@@ -27,12 +27,17 @@ router.post('/', function(req, res, next) {
   })
   .then(function(values){
   	var user = values[0];
+  	console.log("tags here ", req.body.tags)
   	
+  	var tagsArr = req.body.tags.split(" ")
+
   	var page = Page.build({
 	  	title: req.body.title,
 	  	content: req.body.pageContent,
-	  	status: req.body.status
+	  	status: req.body.status,
+	  	tags: tagsArr
 	});
+
 
 	return page.save().then(function(page){
 		return page.setAuthor(user)
@@ -55,11 +60,13 @@ router.get('/:urlTitle', function (req, res, next) {
     } 
   })
   .then(function(foundPage){
+  	var tagStr = foundPage.tags.join(", ")
   	var findingAuthor = foundPage.getAuthor()
   	findingAuthor.then(function(author){
   		res.render('wikipage', {
     		page: foundPage,
-    		author: author
+    		author: author,
+    		tags: tagStr
     	});
   	});
   })

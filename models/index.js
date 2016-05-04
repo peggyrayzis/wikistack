@@ -22,7 +22,11 @@ var Page = db.define('Page',{
 	},
 	status: {
 		type: Sequelize.ENUM('open', 'closed')
+	},
+	tags: {
+		type: Sequelize.ARRAY(Sequelize.TEXT)
 	}
+
 },  {
 	getterMethods: {
 		route: function(){
@@ -43,6 +47,15 @@ Page.hook('beforeValidate', function(page, options){
   	}
 })
 
+Page.find({
+    // $overlap matches a set of possibilities
+    where : {
+        tags: {
+            $overlap: ['someTag', 'someOtherTag']
+        }
+    }    
+});
+
 var User = db.define('User', {
 	name: {
 		type: Sequelize.STRING,
@@ -52,6 +65,12 @@ var User = db.define('User', {
 		type: Sequelize.STRING,
 		isEmail: true,
 		allowNull: false
+	}
+}, {
+	getterMethods: {
+		userroute: function(){
+			return "/users/" + this.id;
+		}
 	}
 });
 
