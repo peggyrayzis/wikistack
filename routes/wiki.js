@@ -55,7 +55,7 @@ router.get('/add', function(req, res, next) {
 });
 
 router.get('/search', function (req, res, next) {
-    Page.findByTag(req.query.search)
+    Page.findByTag(req.query.tags)
         .then(function (pages) {
             res.render('index', {
                 pages: pages
